@@ -19,8 +19,21 @@ class Blockchain:
         self.increamentBlockCount()
 
 
-    def blockchainIsValid(self):
-        pass
+    def validateBlockchain(self):
+        for block in self.blockList:
+            if self.blockList.index(block) != 3:
+                # Compute the block hash again. If the data is tampered, the hash will be changed
+                recentBlockNewTestHash = block.computeHash(data=block.data, prevHash=block.prevHash)
+
+                # Get the "prev hash" from the next block. means the old
+                nextBlockPrevHash = self.blockList[self.blockList.index(block)+1]
+                tamperedBlockNumber = block.blockNumber
+
+                if recentBlockNewTestHash != nextBlockPrevHash:
+                    # raise Exception("Block is tampered. The number is {}".format(tamperedBlockNumber))
+                    print('wtf')
+        return True
+                
 
     def lastBlockHash(self):
         hash = self.blockList[self.blockCount-1].blockHash
@@ -40,7 +53,7 @@ class Block:
         self.data = data
         self.prevHash = prevHash
         self.blockNumber = blockNumber
-        self.computeHash(data, prevHash)
+        self.blockHash = self.computeHash(data, prevHash)
 
     def computeHash(self, data, prevHash):
         hasher = hashes.Hash(hashes.SHA256())
@@ -50,7 +63,7 @@ class Block:
         else:
             hasher.update(data)
             hasher.update(prevHash)
-        self.blockHash = hasher.finalize()
+        return hasher.finalize()
 
 
     def __repr__(self):
@@ -75,4 +88,6 @@ myBlockchain.createBlock(message3)
 message4 = b'fourth message'
 myBlockchain.createBlock(message4)
 
-print(myBlockchain.blockList)
+# print(myBlockchain.blockList)
+
+myBlockchain.validateBlockchain()
