@@ -21,18 +21,18 @@ class Blockchain:
 
     def validateBlockchain(self):
         for block in self.blockList:
-            if self.blockList.index(block) != 3:
+            if block.blockNumber != len(self.blockList):
                 # Compute the block hash again. If the data is tampered, the hash will be changed
                 recentBlockNewTestHash = block.computeHash(data=block.data, prevHash=block.prevHash)
 
                 # Get the "prev hash" from the next block. means the old
-                nextBlockPrevHash = self.blockList[self.blockList.index(block)+1]
+                nextBlockPrevHash = self.blockList[self.blockList.index(block)+1].prevHash
                 tamperedBlockNumber = block.blockNumber
 
                 if recentBlockNewTestHash != nextBlockPrevHash:
-                    # raise Exception("Block is tampered. The number is {}".format(tamperedBlockNumber))
-                    print('wtf')
-        return True
+                    print('The block of number {} has been tampered'.format(tamperedBlockNumber))
+                    return False
+        print('Everything looks normal!')
                 
 
     def lastBlockHash(self):
@@ -88,6 +88,12 @@ myBlockchain.createBlock(message3)
 message4 = b'fourth message'
 myBlockchain.createBlock(message4)
 
-# print(myBlockchain.blockList)
+print(myBlockchain.blockList)
+
+myBlockchain.validateBlockchain()
+
+myBlockchain.blockList[1].data = b'Hello! are u stupid?'
+
+print(myBlockchain.blockList)
 
 myBlockchain.validateBlockchain()
