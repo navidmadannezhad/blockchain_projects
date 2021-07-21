@@ -23,7 +23,7 @@ class Blockchain:
         pass
 
     def lastBlockHash(self):
-        hash = self.blockList[self.blockCount].blockHash
+        hash = self.blockList[self.blockCount-1].blockHash
         return hash
 
     
