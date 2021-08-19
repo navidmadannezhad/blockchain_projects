@@ -1,5 +1,6 @@
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
+import numpy as np
 
 class Transaction:
     inputs = None
@@ -23,16 +24,15 @@ class Transaction:
         self.sig = private_key.sign(message, padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH), hashes.SHA256())
 
     def __gather(self):
-        data = []
-        data.append(self.inputs)
-        data.append(self.outputs)
-        return data
+        data = np.array([self.inputs, self.outputs])
+        return data.tobytes()
+
 
     def transactionIsValid(self):
         pass
 
     def __repr__(self):
-        return 'inputs are {}'.format(self.inputs)+' and outputs are {}'.format(self.outputs)+' and the signature is {}'.format(self.sig)
+        return 'inputs are {}\n'.format(self.inputs)+' and outputs are {}\n'.format(self.outputs)+' and the signature is {}\n'.format(self.sig)
 
 
 class walletAccount:
@@ -55,6 +55,12 @@ account1 = walletAccount(1)
 account2 = walletAccount(2)
 account3 = walletAccount(3)
 
+tx2 = Transaction()
+tx2.add_input(account1.public_key, 250)
+tx2.add_output(account3.public_key, 250)
+tx2.signTransactionWith(account2.private_key)
+
+print(tx2)
 
 
 
