@@ -1,99 +1,70 @@
-""" به نام خداوند جان و خرد. کزین اندیشه برتر نگذرد """
 from cryptography.hazmat.primitives import hashes
 
 
 class Blockchain:
-    blockCount = 0
     blockList = []
 
-    def increamentBlockCount(self):
-        self.blockCount = self.blockCount + 1
-
-
     def createBlock(self, data):
-        if self.blockCount == 0:
-            self.blockList.append(Block(data=data, prevHash=None, blockNumber=1))
+        if len(self.blockList) is 0:
+            block = Block(data=data, prevBlockHash=None, blockNumber=0)
+            self.blockList.append(block)
         else:
-            self.blockList.append(Block(data=data, prevHash=self.lastBlockHash(), blockNumber=self.blockCount+1))
-        
-        self.increamentBlockCount()
-
+            block = Block(data=data, prevBlockHash=self.lastBlock().blockHash, blockNumber=self.lastBlock().blockNumber + 1)
+            self.blockList.append(block)
 
     def validateBlockchain(self):
+        # need a good algorithm for validating
         for block in self.blockList:
-            if block.blockNumber != len(self.blockList):
-                # Compute the block hash again. If the data is tampered, the hash will be changed
-                recentBlockNewTestHash = block.computeHash(data=block.data, prevHash=block.prevHash)
+            if self.blockList.index(block) is not len(self.blockList) - 1:
+                newTestBlockHash = block.computeHash(data=block.data, prevBlockHash=block.prevBlockHash)
 
-                # Get the "prev hash" from the next block. means the old
-                nextBlockPrevHash = self.blockList[self.blockList.index(block)+1].prevHash
-                tamperedBlockNumber = block.blockNumber
+                if newTestBlockHash == self.blockList[self.blockList.index(block)+1].prevBlockHash:
+                    print('block number {} is ok!'.format(self.blockList.index(block)))
+                else:
+                    print('block number {} is tampered'.format(self.blockList.index(block)))
 
-                if recentBlockNewTestHash != nextBlockPrevHash:
-                    print('The block of number {} has been tampered'.format(tamperedBlockNumber))
-                    return False
-        print('Everything looks normal!')
-                
+    def lastBlock(self):
+        lastBlock = self.blockList[len(self.blockList) - 1]
+        return lastBlock
 
-    def lastBlockHash(self):
-        hash = self.blockList[self.blockCount-1].blockHash
-        return hash
+    def __repr__(self):
+        return str(self.blockList)
 
-    
 
 
 
 class Block:
     data = None
     blockNumber = None
-    prevHash = None
+    prevBlockHash = None
     blockHash = None
-    
-    def __init__(self, data, prevHash, blockNumber):
-        self.data = data
-        self.prevHash = prevHash
-        self.blockNumber = blockNumber
-        self.blockHash = self.computeHash(data, prevHash)
 
-    def computeHash(self, data, prevHash):
+    def __init__(self, data, prevBlockHash, blockNumber):
+        self.data = data
+        self.prevBlockHash = prevBlockHash
+        self.blockNumber = blockNumber
+        self.blockHash = self.computeHash(data, prevBlockHash)
+
+    def computeHash(self, data, prevBlockHash):
         hasher = hashes.Hash(hashes.SHA256())
-        thisIsGenesisBlock = prevHash is None
+        thisIsGenesisBlock = prevBlockHash is None
         if thisIsGenesisBlock:
-            hasher.update(data)
+            hasher.update(bytes(str(data), 'utf-8'))
         else:
-            hasher.update(data)
-            hasher.update(prevHash)
+            hasher.update(bytes(str(data), 'utf-8'))
+            hasher.update(bytes(str(prevBlockHash), 'utf-8'))
         return hasher.finalize()
 
-
     def __repr__(self):
-        blockInformation = "Block number = {num}, block data = {data}, block hash = {hash}, previous block hash = {prevHash}".format(num=self.blockNumber, data=self.data, hash=self.blockHash, prevHash=self.prevHash)
-        return blockInformation
+        return "Block Number: {}\n".format(self.blockNumber)+" data: {}\n".format(self.data)+" previous block hash: {}\n".format(self.prevBlockHash)+" block hash: {}\n".format(self.blockHash)
 
 
-    
 
 
 myBlockchain = Blockchain()
 
-message = b'This is the data to be stored'
-myBlockchain.createBlock(message)
-
-message2 = b'second message'
-myBlockchain.createBlock(message2)
-
-message3 = b'third message'
-myBlockchain.createBlock(message3)
-
-message4 = b'fourth message'
-myBlockchain.createBlock(message4)
-
-print(myBlockchain.blockList)
-
-myBlockchain.validateBlockchain()
-
-myBlockchain.blockList[1].data = b'Hello! are u stupid?'
-
-print(myBlockchain.blockList)
+myBlockchain.createBlock('hello')
+myBlockchain.createBlock('this is the second')
+myBlockchain.createBlock(123)
 
 myBlockchain.validateBlockchain()
