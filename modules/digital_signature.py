@@ -7,6 +7,8 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.exceptions import InvalidSignature
 
+import pickle
+
 def generate_keys():
     privateKey = rsaAlgorithm.generate_private_key(
         backend=None,
@@ -35,15 +37,20 @@ def sign(message, privateKey):
 
 
 def verify(message, signature, publicKey):
-    publicKey.verify(
-        signature,
-        message,
-        padding.PSS(
-            mgf=padding.MGF1(hashes.SHA256()),
-            salt_length=padding.PSS.MAX_LENGTH
-        ),
-        hashes.SHA256()
-    )
+    try:
+        publicKey.verify(
+            signature,
+            message,
+            padding.PSS(
+                mgf=padding.MGF1(hashes.SHA256()),
+                salt_length=padding.PSS.MAX_LENGTH
+            ),
+            hashes.SHA256()
+        )
+        return True
+        
+    except InvalidSignature:
+        return False
 
 
 if __name__ == '__main__':
