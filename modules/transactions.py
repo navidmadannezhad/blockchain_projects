@@ -53,7 +53,7 @@ class Transaction:
             return False
 
     def __repr__(self):
-        return 'inputs are {}\n'.format(self.inputs)+' and outputs are {}\n'.format(self.outputs)+' and transaction is {}'.format(self.is_valid() and 'Valid' or 'InValid')
+        return 'inputs are {}\n'.format(self.inputs)+' and outputs are {}\n'.format(self.outputs)+' and transaction is {}'.format(self.is_valid() and 'Valid' or 'InValid')+'\n'
 
 
 # class TransactionBlock(Block):

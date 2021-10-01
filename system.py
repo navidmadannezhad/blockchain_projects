@@ -2,8 +2,6 @@ from modules.blockchain import Blockchain
 from modules.transactions import Transaction
 from modules.digital_signature import generate_keys
 
-import pickle
-
 
 # navid test ------------------------------
 
@@ -42,7 +40,6 @@ for tx in data:
         validated_data.append(tx)
     
 hyperChain.createBlock(validated_data)
-print(hyperChain)
 
 
 
