@@ -1,13 +1,11 @@
 from cryptography.hazmat import primitives
 from cryptography.hazmat.primitives.asymmetric.rsa import generate_private_key
 
-
 import cryptography.hazmat.primitives.asymmetric.rsa as rsaAlgorithm
-from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.exceptions import InvalidSignature
 
-import pickle
 
 def generate_keys():
     privateKey = rsaAlgorithm.generate_private_key(
@@ -16,6 +14,11 @@ def generate_keys():
         public_exponent=65537
     )
     publicKey = privateKey.public_key()
+
+    publicKey = publicKey.public_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo
+    )
 
     return publicKey, privateKey
 
@@ -37,8 +40,12 @@ def sign(message, privateKey):
 
 
 def verify(message, signature, publicKey):
+    publicKey_instance = serialization.load_pem_public_key(
+        publicKey,
+    )
+
     try:
-        publicKey.verify(
+        publicKey_instance.verify(
             signature,
             message,
             padding.PSS(

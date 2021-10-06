@@ -1,5 +1,5 @@
 from cryptography.hazmat.primitives import hashes
-from .fileCreator import create
+from .blockFileCreator import BlockFileCreator
 
 class Block:
     data = None
@@ -12,8 +12,8 @@ class Block:
         self.prevBlockHash = prevBlockHash
         self.blockNumber = blockNumber
         self.blockHash = self.computeHash(data, prevBlockHash)
-
-        create(self)
+        print(self.data[0].inputs);
+        createBlockFile = BlockFileCreator(content=self.data[0], suffix=self.blockNumber)
 
     def computeHash(self, data, prevBlockHash):
         hasher = hashes.Hash(hashes.SHA256())

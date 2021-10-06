@@ -27,8 +27,6 @@ tx2.add_input(pu1, 1)
 tx2.add_output(pu3, 1)
 tx2.signTransactionWith(pv2)
 
-
-
 # creating blockchain
 hyperChain = Blockchain()
 
@@ -40,6 +38,5 @@ for tx in data:
         validated_data.append(tx)
     
 hyperChain.createBlock(validated_data)
-
 
 
