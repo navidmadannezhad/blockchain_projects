@@ -17,25 +17,26 @@ class Transaction:
         self.outputs = []
         
     def add_input(self, from_address, amount):
-        input = {'from_address': from_address, 'amount': amount}
-        self.inputs.append(input)
+        txInput = {'from_address': from_address, 'amount': amount}
+        self.inputs.append(txInput)
 
     def add_output(self, to_address, amount):
-        output = {'to_address': to_address, 'amount': amount}
-        self.outputs.append(output)
+        txOutput = {'to_address': to_address, 'amount': amount}
+        self.outputs.append(txOutput)
 
     def signTransactionWith(self, private_key):
-        message = self.__gather()
+        message = bytes(str(self.__gather()), 'utf-8')
         self.sig = digital_signature.sign(message=message, privateKey=private_key)
 
     def __gather(self):
-        data = np.array([self.inputs, self.outputs])
-        return data.tobytes()
+        data = [self.inputs, self.outputs]
+        return data
 
 
     def is_valid(self):
-        message = self.__gather()
-        # here we got problem
+        # we must have byte like data, and before that we need str data. so we convert data to str and then byte
+        message = bytes(str(self.__gather()), 'utf-8')
+
         if digital_signature.verify(message, self.sig, self.public_key):
 
             input_amount_sum = 0

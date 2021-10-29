@@ -12,7 +12,7 @@ class Block:
         self.prevBlockHash = prevBlockHash
         self.blockNumber = blockNumber
         self.blockHash = self.computeHash(data, prevBlockHash)
-        print(self.data[0].inputs);
+
         createBlockFile = BlockFileCreator(content=self.data[0], suffix=self.blockNumber)
 
     def computeHash(self, data, prevBlockHash):

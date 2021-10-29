@@ -20,6 +20,7 @@ def generate_keys():
         format=serialization.PublicFormat.SubjectPublicKeyInfo
     )
 
+    # pu is returned as string, but pr as obj. we do this because we are not going to pickle pr anywhere, for now
     return publicKey, privateKey
 
 
