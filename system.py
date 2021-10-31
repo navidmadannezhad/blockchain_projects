@@ -38,8 +38,8 @@ hyperChain = Blockchain()
 tx4 = Transaction(pu4)
 tx4.add_output(pu4, 25)
 tx4.signTransactionWith(pv4)
-# start mining
-print(tx4)
+
+
 
 
 
