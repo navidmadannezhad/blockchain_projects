@@ -1,5 +1,5 @@
-from cryptography.hazmat.primitives import hashes
 from .blockFileCreator import BlockFileCreator
+from main.consensus import Block_hash
 
 class Block:
     data = None
@@ -16,14 +16,12 @@ class Block:
         createBlockFile = BlockFileCreator(content=self.data[0], suffix=self.blockNumber)
 
     def computeHash(self, data, prevBlockHash):
-        hasher = hashes.Hash(hashes.SHA256())
         thisIsGenesisBlock = prevBlockHash is None
         if thisIsGenesisBlock:
-            hasher.update(bytes(str(data), 'utf-8'))
+            hasher = Block_hash(prevBlock_hash=None, block_data=data)
         else:
-            hasher.update(bytes(str(data), 'utf-8'))
-            hasher.update(bytes(str(prevBlockHash), 'utf-8'))
-        return hasher.finalize()
+            hasher = Block_hash(prevBlock_hash=self.prevBlockHash, block_data=data)
+        self.blockHash = hasher.generate_hash()
 
     def __repr__(self):
         return "Block Number: {}\n".format(self.blockNumber)+" data: {}\n".format(self.data)+" previous block hash: {}\n".format(self.prevBlockHash)+" block hash: {}\n".format(self.blockHash)+'\n\n'
