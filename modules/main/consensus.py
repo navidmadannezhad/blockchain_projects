@@ -41,34 +41,22 @@ class Block_hash():
             hasher.update(bytes(str(self.block_data), 'utf-8'))
             hasher.update(bytes(str(self.prevBlock_hash), 'utf-8'))
             # hasher.update(bytes(str(nonce), 'utf-8'))
-        return self.hexToASCII(hasher.finalize())
+        # turns /x into normal hex (when data is in byte form)
+        return hasher.finalize().hex()
 
     def generate_nonce(self):
         return uuid.uuid4().hex
 
     def hash_is_good():
         pass
-
-    def hexToASCII(self, hexx):
-        asci = ""
-    
-        for i in range(0, len(hexx), 2):
-            part = hexx[i : i + 2]
-            ch = chr(int(part, 16))
-            asci += ch
-        return asci
     
 
 
 # Driver Code
 if __name__ == "__main__":
 
-    hasher = Block_hash(prevBlock_hash="111", block_data="hi")
+    hasher = Block_hash(prevBlock_hash="11", block_data="hi")
     myHash = hasher.generate_hash()
     print(myHash)
-
-    # we get error: ValueError: invalid literal for int() with base 16: b'\x87\x86'
-
-    # print(hexToASCII("6765656b73"))
         
 
