@@ -1,5 +1,5 @@
 from .blockFileCreator import BlockFileCreator
-from main.consensus import Block_hash
+from .main.consensus import Hash_maker
 
 class Block:
     data = None
@@ -18,9 +18,9 @@ class Block:
     def computeHash(self, data, prevBlockHash):
         thisIsGenesisBlock = prevBlockHash is None
         if thisIsGenesisBlock:
-            hasher = Block_hash(prevBlock_hash=None, block_data=data)
+            hasher = Hash_maker(prevBlock_hash=None, block_data=data)
         else:
-            hasher = Block_hash(prevBlock_hash=self.prevBlockHash, block_data=data)
+            hasher = Hash_maker(prevBlock_hash=self.prevBlockHash, block_data=data)
         self.blockHash = hasher.generate_hash()
 
     def __repr__(self):

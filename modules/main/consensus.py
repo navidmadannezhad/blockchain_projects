@@ -1,5 +1,6 @@
 import uuid
 from cryptography.hazmat.primitives import hashes
+from .. import config
 
 class Hash_maker():
     block_data = None
@@ -13,7 +14,6 @@ class Hash_maker():
 
     def generate_hash(self):
         thisIsGenesisBlock = self.prevBlock_hash is None
-
         while True:
             hasher = hashes.Hash(hashes.SHA256())
             if thisIsGenesisBlock:
@@ -36,9 +36,14 @@ class Hash_maker():
     def hash_is_good(self):
         must_zero_part = self.block_hash[0:1]
         for i in must_zero_part:
-            if i is not 0:
+            try:
+                # checks if i is letter or not. if not, continues to check if being zero
+                i = int(i)
+                if i is not 0:
+                    return False
+            except:
                 return False
-        return True
+            return True
     
 
 

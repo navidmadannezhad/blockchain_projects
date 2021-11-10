@@ -33,11 +33,13 @@ tx3.signTransactionWith(pv3)
 
 # creating blockchain
 hyperChain = Blockchain()
+hyperChain.createBlock([tx1, tx2, tx3])
 
-# miner base -------------------------------------------------------------------
-tx4 = Transaction(pu4)
-tx4.add_output(pu4, 25)
-tx4.signTransactionWith(pv4)
+print(hyperChain.blockList)
+# # miner base -------------------------------------------------------------------
+# tx4 = Transaction(pu4)
+# tx4.add_output(pu4, 25)
+# tx4.signTransactionWith(pv4)
 
 
 
