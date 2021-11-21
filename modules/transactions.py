@@ -1,6 +1,5 @@
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
-import numpy as np
 
 from . import digital_signature
 from .block import Block

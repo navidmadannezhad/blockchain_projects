@@ -1,6 +1,5 @@
 import uuid
 from cryptography.hazmat.primitives import hashes
-from .. import config
 
 class Hash_maker():
     block_data = None
@@ -25,7 +24,6 @@ class Hash_maker():
                 hasher.update(bytes(str(self.generate_nonce()), 'utf-8'))
             # turns /x into normal hex (when data is in byte form)
             self.block_hash = hasher.finalize().hex()
-            print(self.block_hash)
             if self.hash_is_good():
                 return self.block_hash
 
