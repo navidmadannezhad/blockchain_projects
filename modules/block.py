@@ -21,7 +21,7 @@ class Block:
             hasher = Hash_maker(prevBlock_hash=None, block_data=data)
         else:
             hasher = Hash_maker(prevBlock_hash=self.prevBlockHash, block_data=data)
-        self.blockHash = hasher.generate_hash()
+        return hasher.generate_hash()
 
     def __repr__(self):
         return "Block Number: {}\n".format(self.blockNumber)+" data: {}\n".format(self.data)+" previous block hash: {}\n".format(self.prevBlockHash)+" block hash: {}\n".format(self.blockHash)+'\n\n'

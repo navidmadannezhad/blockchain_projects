@@ -32,7 +32,7 @@ class Hash_maker():
         return uuid.uuid4().hex
 
     def hash_is_good(self):
-        must_zero_part = self.block_hash[0:1]
+        must_zero_part = self.block_hash[0:3]
         for i in must_zero_part:
             try:
                 # checks if i is letter or not. if not, continues to check if being zero
@@ -41,7 +41,7 @@ class Hash_maker():
                     return False
             except:
                 return False
-            return True
+        return True
     
 
 

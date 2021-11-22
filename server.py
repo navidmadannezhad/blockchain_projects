@@ -18,10 +18,15 @@ readable_s, writable_s, exceptional_s = select.select([s], [], [s])
 
 for s in readable_s:
     client, address = s.accept()
-    client.send('The data has been recieved'.encode())
 
-    message = s.recv(1024)
-    non_byte_block = pickle.loads(message)
+    data = b''
+    while True:
+        message = client.recv(1024)
+        if not message:
+            break
+        data = data + message
+
+    non_byte_block = pickle.loads(data)
     print(f'{non_byte_block} is recieved in server')
 
     client.close()
