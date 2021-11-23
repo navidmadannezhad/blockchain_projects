@@ -1,18 +1,12 @@
+import socket
+import pickle
+
 from modules.block import Block
 from modules.blockchain import Blockchain 
 from modules.transactions import Transaction
 from modules.digital_signature import *
-import socket
-import pickle
 
-PORT = 5005
-
-def send_block(ip_address, block):
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((ip_address, PORT))
-    block_in_byte_format = pickle.dumps(block)
-    s.send(block_in_byte_format)
-
+from modules.main.socket_utils import *
 
 if __name__ == '__main__':
 
@@ -58,4 +52,4 @@ if __name__ == '__main__':
     my_blockchain.createBlock(valid_transactions)
 
     blocks = my_blockchain.blockList
-    send_block('localhost', blocks)  
+    send_data('localhost', blocks)  
