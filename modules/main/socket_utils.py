@@ -1,30 +1,38 @@
 import socket
 import pickle
 
-PORT = 5005
-IP_ADDRESS = '127.0.0.1'
-
-def new_server_connection():
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind((IP_ADDRESS, PORT))
-    s.listen(5)
-    return s
+class Connection:
+    s = None
+    ip_address = None
+    port = None
+    buffer_size = None
 
 
-def recieve_data(socket):
-    client, addr = socket.accept()
-    data = b''
-    while True:
-        message = client.recv(1024)
-        if not message:
-            break
-        data = data + message
-    pickled_data = pickle.loads(data)
-    return pickled_data
+    def __init__(self, ip_address, port, buffer_size=1024):
+        self.ip_address = ip_address
+        self.port = port
+        self.buffer_size = buffer_size
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
-def send_data(ip_address, block):
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((ip_address, PORT))
-    block_in_byte_format = pickle.dumps(block)
-    s.send(block_in_byte_format)
+    def send_data(self, data):
+        self.s.connect((self.ip_address, self.port))
+        data_in_byte_format = pickle.dumps(data)
+        self.s.send(data_in_byte_format)
+
+
+    def make_ready(self):
+        self.s.bind((self.ip_address, self.port))
+        self.s.listen()
+
+
+    def recieve_data(self):
+        client, addr = self.s.accept()
+        data = b''
+        while True:
+            message = client.recv(1024)
+            if not message:
+                break
+            data = data + message
+        pickled_data = pickle.loads(data)
+        return pickled_data
