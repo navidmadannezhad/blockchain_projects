@@ -36,3 +36,7 @@ class Connection:
             data = data + message
         pickled_data = pickle.loads(data)
         return pickled_data
+
+
+    def terminate(self):
+        self.s.close()
