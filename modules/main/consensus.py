@@ -1,6 +1,8 @@
 import uuid
 from cryptography.hazmat.primitives import hashes
 
+from config import consensus_leading_zeros
+
 class Hash_maker():
     block_data = None
     block_hash = None
@@ -13,6 +15,7 @@ class Hash_maker():
 
     def generate_hash(self):
         thisIsGenesisBlock = self.prevBlock_hash is None
+        print('MINING STARTED -------------------------------------------------------------------')
         while True:
             hasher = hashes.Hash(hashes.SHA256())
             if thisIsGenesisBlock:
@@ -25,6 +28,7 @@ class Hash_maker():
             # turns /x into normal hex (when data is in byte form)
             self.block_hash = hasher.finalize().hex()
             if self.hash_is_good():
+                print('MINING FINISHED -------------------------------------------------------------------')
                 return self.block_hash
 
 
@@ -32,7 +36,7 @@ class Hash_maker():
         return uuid.uuid4().hex
 
     def hash_is_good(self):
-        must_zero_part = self.block_hash[0:3]
+        must_zero_part = self.block_hash[0:consensus_leading_zeros]
         for i in must_zero_part:
             try:
                 # checks if i is letter or not. if not, continues to check if being zero
