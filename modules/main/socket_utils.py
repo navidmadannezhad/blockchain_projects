@@ -20,7 +20,7 @@ class Connection:
         data_in_byte_format = pickle.dumps(data)
         self.s.send(data_in_byte_format)
 
-
+    # is used for server sockets --
     def make_ready(self):
         self.s.bind((self.ip_address, self.port))
         self.s.listen()
