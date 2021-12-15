@@ -25,3 +25,4 @@ class Block:
 
     def __repr__(self):
         return "Block Number: {}\n".format(self.blockNumber)+" data: {}\n".format(self.data)+" previous block hash: {}\n".format(self.prevBlockHash)+" block hash: {}\n".format(self.blockHash)+'\n\n'
+

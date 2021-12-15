@@ -56,75 +56,18 @@ class Transaction:
         return 'inputs are {}\n'.format(self.inputs)+' and outputs are {}\n'.format(self.outputs)+' and transaction is {}'.format(self.is_valid() and 'Valid' or 'InValid')+'\n'
 
 
-# class TransactionBlock(Block):
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# class walletAccount:
-#     private_key = None
-#     public_key = None
-#     account_number = None
-
-#     def __init__(self, account_number):
-#         self.private_key =  rsa.generate_private_key(public_exponent=65537, key_size=2048)
-#         self.public_key = self.private_key.public_key()
-#         self.account_number = account_number
-
-#     def __repr__(self):
-#         return 'Account Number: {}\n'.format(self.account_number)+'Public Key: {}\n'.format(self.public_key)+'Private Key: {}\n'.format(self.private_key)
-
-
-
-
-
-
-    
+# transaction -- form
+0: {
+    'public_key': 'fff',
+    'sig': 'fff',
+    'inputs': [
+        {'from': 'fff', 'amount': 5},
+        {'from': 'fff', 'amount': 5},
+        {'from': 'fff', 'amount': 5},
+    ],
+    'outputs': [
+        {'to': 'fff', 'amount': 5},
+        {'to': 'fff', 'amount': 5},
+        {'to': 'fff', 'amount': 5},
+    ],
+}
