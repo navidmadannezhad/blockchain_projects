@@ -5,8 +5,8 @@ from . import digital_signature
 from .block import Block
 
 class Transaction:
-    inputs = None
-    outputs = None
+    inputs = []
+    outputs = []
     sig = None
     public_key = None
 
@@ -53,21 +53,15 @@ class Transaction:
             return False
 
     def __repr__(self):
-        return 'inputs are {}\n'.format(self.inputs)+' and outputs are {}\n'.format(self.outputs)+' and transaction is {}'.format(self.is_valid() and 'Valid' or 'InValid')+'\n'
-
+        structure = {
+            'public_key': self.public_key,
+            'sig': self.sig,
+            'inputs': self.inputs,
+            'outputs': self.outputs,
+        }
+        return str(structure)
 
 # transaction -- form
-0: {
-    'public_key': 'fff',
-    'sig': 'fff',
-    'inputs': [
-        {'from': 'fff', 'amount': 5},
-        {'from': 'fff', 'amount': 5},
-        {'from': 'fff', 'amount': 5},
-    ],
-    'outputs': [
-        {'to': 'fff', 'amount': 5},
-        {'to': 'fff', 'amount': 5},
-        {'to': 'fff', 'amount': 5},
-    ],
-}
+# 0: {
+    {'public_key': 'fff','sig': 'fff','inputs': [{'from': 'fff', 'amount': 5},],'outputs': [{'to': 'fff', 'amount': 5}]}
+# }

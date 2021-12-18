@@ -44,6 +44,7 @@ def wallet_server(data):
 # to recieve data
 def miner_server():
     miner_server = Connection('localhost', miner_port)
+    miner_server.make_ready()
     for i in range(30):
         print(miner_server.recieve_data())
 

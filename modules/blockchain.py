@@ -13,13 +13,23 @@ class Blockchain:
 
     def validateBlockchain(self):
         for block in self.blockList:
+            # validating the transactions
+            transactions = block.data
+            for transaction in transactions:
+                if not transaction.is_valid():
+                    print(f'block number {self.blockList.index(block)} is not valid\nCause of invalidity: invalid Transaction found')
+                    return False
+
+            # validating the block
             if self.blockList.index(block) is not len(self.blockList) - 1:
                 newTestBlockHash = block.computeHash(data=block.data, prevBlockHash=block.prevBlockHash)
 
-                if newTestBlockHash == self.blockList[self.blockList.index(block)+1].prevBlockHash:
-                    print('block number {} is ok!'.format(self.blockList.index(block)))
-                else:
-                    print('block number {} is tampered'.format(self.blockList.index(block)))
+                if newTestBlockHash != self.blockList[self.blockList.index(block)+1].prevBlockHash:
+                    print(f'block number {self.blockList.index(block)} is not valid\nCause of invalidity: invalid Block Hash')
+                    return False
+            
+            return True
+
 
     def lastBlock(self):
         lastBlock = self.blockList[len(self.blockList) - 1]
