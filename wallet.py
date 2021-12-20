@@ -1,6 +1,6 @@
 import pickle
 import threading
-from config import private_key_path, public_key_path, dlt_path, miner_port, wallet_port
+from config import private_key_path, dlt_path, miner_port, wallet_port
 
 from modules.main.socket_utils import Connection
 from modules.transactions import Transaction
@@ -8,19 +8,16 @@ from modules.digital_signature import *
 
 def create_super_user():
     pu, pr = generate_keys()
-    save_public_key = open(public_key_path, 'wb')
-    pickle.dump(save_public_key, pu)
     save_private_key = open(private_key_path, 'wb')
-    pickle.dump(save_private_key, pr)
+    pickle.dump(pr_to_pem(pr), save_private_key)
 
     
 def load_superuser_keys():
     pr_file = open(private_key_path, 'rb')
-    private_key = pickle.load(pr_file)
-    pu_file = open(public_key_path, 'rb')
-    public_key = pickle.load(pu_file)
-
-    return private_key, public_key
+    pem_pr = pickle.load(pr_file)
+    pr = pem_to_pr_obj(pem_pr)
+    pu = pr.public_key()
+    return pr, pu
 
 
 def ledger_is_present():

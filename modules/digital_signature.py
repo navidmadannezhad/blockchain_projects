@@ -15,15 +15,31 @@ def generate_keys():
     )
     publicKey = privateKey.public_key()
 
-    publicKey = publicKey.public_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo
-    )
-
-    # pu is returned as string, but pr as obj. we do this because we are not going to pickle pr anywhere, for now
+    # returns objects of keys
     return publicKey, privateKey
 
 
+def pu_to_pem(pu):
+    pem_pu = pu.public_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo
+    )
+    return pem_pu
+
+def pr_to_pem(pr):
+    pem_pr = pr.private_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.PKCS8,
+        encryption_algorithm=serialization.NoEncryption()
+    )
+    return pem_pr
+
+def pem_to_pr_obj(pem_pr):
+    private_key = serialization.load_pem_private_key(
+        pem_pr,
+        password=None,
+    )
+    return private_key
 
 def sign(message, privateKey):
     signature = privateKey.sign(

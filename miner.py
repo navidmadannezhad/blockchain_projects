@@ -8,6 +8,7 @@ from modules.blockchain import Blockchain
 from modules.transactions import Transaction
 
 
+
 validated_transactions = []
 hyper_chain = Blockchain()
 
