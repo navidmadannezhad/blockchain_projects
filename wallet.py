@@ -48,7 +48,8 @@ def miner_server():
     server_connection.make_ready()
     print('wallet is listening now! --')
     for i in range(1):
-        print(server_connection.recieve_data())
+        ledger = server_connection.recieve_data()
+        print(ledger)
         print('data is recieved from miner --')
 
 

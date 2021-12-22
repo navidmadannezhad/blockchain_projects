@@ -52,11 +52,23 @@ def save_to_ledger(data):
         os.mkdir(dlt_directory)
     save_file = open(dlt_path, 'ab')
     pickle.dump(data, save_file)
+    save_file.close()
 
 
 def load_ledger():
     load_file = open(dlt_path, 'rb')
-    return pickle.load(load_file)
+    ledger = []
+    while True:
+        try:
+            transaction = pickle.load(load_file)
+            ledger.append(transaction)
+        except:
+            # pickle items are finished
+            load_file.close()
+            break
+        
+    return ledger
+
     
 
 
