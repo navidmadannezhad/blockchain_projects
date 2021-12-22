@@ -10,17 +10,23 @@ from modules.transactions import Transaction
 
 validated_transactions = []
 hyper_chain = Blockchain()
-server_connection = Connection('localhost', wallet_port)
-client_connection = Connection('localhost', miner_port)
 
+# to recieve data
 def wallet_server():
+    global server_connection
+    server_connection = Connection('localhost', wallet_port)
     server_connection.make_ready()
     print('miner is listening! --')
-    for i in range(30):
-        print(client_connection)
+    for i in range(1):
         data = server_connection.recieve_data()
         print('data is recieved from wallet --')
         proccess_data(data)
+
+# to send data
+def miner_server(data):
+    client_connection = Connection('localhost', miner_port)
+    client_connection.send_data(data)
+    print('data is sent to wallet --')
 
                 
 def proccess_data(data):
@@ -29,15 +35,16 @@ def proccess_data(data):
             if item.is_valid():
                 validated_transactions.append(item)
                 save_to_ledger(item)
-                ledger = load_ledger()
-                miner_server(ledger)
 
     if hyper_chain.validateBlockchain():
         hyper_chain.createBlock(validated_transactions)
     else:
         print('blockchain is not valid')
 
-    server_connection.terminate()
+    # we are only getting one transaction
+    ledger = load_ledger()
+    miner_server(ledger)
+
 
 
 def save_to_ledger(data):
@@ -51,13 +58,6 @@ def load_ledger():
     load_file = open(dlt_path, 'rb')
     return pickle.load(load_file)
     
-    
-def miner_server(data):
-    client_connection.send_data(data)
-    print('data is sent to wallet --')
-
-
-
 
 
 

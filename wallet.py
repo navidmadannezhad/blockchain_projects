@@ -8,9 +8,6 @@ from modules.transactions import Transaction
 from modules.digital_signature import *
 
 
-client_connection = Connection('localhost', wallet_port)
-server_connection = Connection('localhost', miner_port)
-
 def create_super_user():
     pr, pu = generate_keys()
     save_private_key = open(private_key_path, 'wb')
@@ -41,17 +38,18 @@ def find_balance(public_key, ledger):
 
 # to send data
 def wallet_server(data):
+    client_connection = Connection('localhost', wallet_port)
     client_connection.send_data(data)
     print('data is sent to miner --')
 
 # to recieve data
 def miner_server():
+    server_connection = Connection('localhost', miner_port)
     server_connection.make_ready()
     print('wallet is listening now! --')
-    for i in range(30):
+    for i in range(1):
         print(server_connection.recieve_data())
         print('data is recieved from miner --')
-    server_connection.terminate()
 
 
 if __name__ == '__main__':
