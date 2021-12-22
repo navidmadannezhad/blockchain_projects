@@ -63,7 +63,7 @@ if __name__ == '__main__':
     pr3, pu3 = generate_keys()
 
     tx1 = Transaction(pu1)
-    tx1.add_input(pu2, 3)
+    tx1.add_input(pu2, 5)
     tx1.add_output(pu2, 3)
     tx1.signTransactionWith(pr1)
 
