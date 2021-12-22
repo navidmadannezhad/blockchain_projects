@@ -2,8 +2,7 @@ import os
 
 # ledger file information -----------------------------------
 dlt_directory = './ledger/'
-dlt_file = 'ledger'
-dlt_format = 'dat'
+dlt_file = 'ledger.dat'
 dlt_path = os.path.join(dlt_directory, dlt_file)
 
 # client keys file information -----------------------------------
@@ -22,8 +21,8 @@ private_key_path = os.path.join(keys_directory, private_key_file)
 consensus_leading_zeros = 1
 
 # connection data -----------------------------------
-miner_port = 445
-wallet_port = 135
+miner_port = 50000
+wallet_port = 60000
 
 # block information -----------------------------------
 max_tx_in_block = 4

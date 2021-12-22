@@ -39,4 +39,5 @@ class Connection:
 
 
     def terminate(self):
+        print(self.s)
         self.s.close()

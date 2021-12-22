@@ -16,7 +16,7 @@ def generate_keys():
     publicKey = privateKey.public_key()
 
     # returns objects of keys
-    return publicKey, privateKey
+    return privateKey, pu_to_pem(publicKey)
 
 
 def pu_to_pem(pu):

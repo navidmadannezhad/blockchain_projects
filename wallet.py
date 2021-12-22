@@ -1,3 +1,4 @@
+import os
 import pickle
 import threading
 from config import private_key_path, dlt_path, miner_port, wallet_port
@@ -6,8 +7,12 @@ from modules.main.socket_utils import Connection
 from modules.transactions import Transaction
 from modules.digital_signature import *
 
+
+client_connection = Connection('localhost', wallet_port)
+server_connection = Connection('localhost', miner_port)
+
 def create_super_user():
-    pu, pr = generate_keys()
+    pr, pu = generate_keys()
     save_private_key = open(private_key_path, 'wb')
     pickle.dump(pr_to_pem(pr), save_private_key)
 
@@ -17,7 +22,8 @@ def load_superuser_keys():
     pem_pr = pickle.load(pr_file)
     pr = pem_to_pr_obj(pem_pr)
     pu = pr.public_key()
-    return pr, pu
+    # returns pr as object and pu and pem (to be able to pickle in socket connections)
+    return pr, pu_to_pem(pu)
 
 
 def ledger_is_present():
@@ -35,15 +41,17 @@ def find_balance(public_key, ledger):
 
 # to send data
 def wallet_server(data):
-    wallet_server = Connection('localhost', wallet_port)
-    wallet_server.send_data(data)
+    client_connection.send_data(data)
+    print('data is sent to miner --')
 
 # to recieve data
 def miner_server():
-    miner_server = Connection('localhost', miner_port)
-    miner_server.make_ready()
+    server_connection.make_ready()
+    print('wallet is listening now! --')
     for i in range(30):
-        print(miner_server.recieve_data())
+        print(server_connection.recieve_data())
+        print('data is recieved from miner --')
+    server_connection.terminate()
 
 
 if __name__ == '__main__':
@@ -56,18 +64,18 @@ if __name__ == '__main__':
     pr2, pu2 = generate_keys()
     pr3, pu3 = generate_keys()
 
-    tx1 = Transaction()
+    tx1 = Transaction(pu1)
     tx1.add_input(pu2, 3)
     tx1.add_output(pu2, 3)
     tx1.signTransactionWith(pr1)
 
-    tx2 = Transaction()
+    tx2 = Transaction(pu1)
     tx2.add_input(pu1, 5)
     tx2.add_output(pu2, 4)
     tx2.add_output(pu1, 1)
     tx2.signTransactionWith(pr1)
 
-    tx3 = Transaction()
+    tx3 = Transaction(pu1)
     tx3.add_input(pu3, 10)
     tx3.add_output(pu2, 11)
     tx3.signTransactionWith(pr1)
@@ -76,7 +84,7 @@ if __name__ == '__main__':
 # 1 - send tx to miner
 # we send data from one port, and recieve data from another
     tx_list = [tx1, tx2, tx3]
-    wallet_thread = threading.Thread(target=wallet_server, args=(tx_list))
+    wallet_thread = threading.Thread(target=wallet_server, args=(tx_list,))
     miner_thread = threading.Thread(target=miner_server)
 
     wallet_thread.start()
@@ -85,7 +93,7 @@ if __name__ == '__main__':
  
 
 # 2 - recieve DLT 
-    if ledger_is_present:
+    if ledger_is_present():
         print('Ledger is found')
         ledger = load_ledger()
     else:
@@ -95,3 +103,9 @@ if __name__ == '__main__':
 # 1.5 - recieve new balance of everyone
 
 # 3 - save DLT
+
+
+
+
+    wallet_thread.join()
+    miner_thread.join()

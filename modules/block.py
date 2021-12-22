@@ -13,8 +13,6 @@ class Block:
         self.blockNumber = blockNumber
         self.blockHash = self.computeHash(data, prevBlockHash)
 
-        createBlockFile = BlockFileCreator(content=self.data[0], suffix=self.blockNumber)
-
     def computeHash(self, data, prevBlockHash):
         thisIsGenesisBlock = prevBlockHash is None
         if thisIsGenesisBlock:

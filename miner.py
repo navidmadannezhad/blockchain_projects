@@ -8,16 +8,20 @@ from modules.blockchain import Blockchain
 from modules.transactions import Transaction
 
 
-
 validated_transactions = []
 hyper_chain = Blockchain()
+server_connection = Connection('localhost', wallet_port)
+client_connection = Connection('localhost', miner_port)
 
 def wallet_server():
-    wallet_server = Connection('localhost', wallet_port)
-    wallet_server.make_ready()
+    server_connection.make_ready()
+    print('miner is listening! --')
     for i in range(30):
-        data = wallet_server.recieve_data()
+        print(client_connection)
+        data = server_connection.recieve_data()
+        print('data is recieved from wallet --')
         proccess_data(data)
+
                 
 def proccess_data(data):
     for item in data:
@@ -28,15 +32,19 @@ def proccess_data(data):
                 ledger = load_ledger()
                 miner_server(ledger)
 
-        if hyper_chain.validateBlockchain():
-            hyper_chain.createBlock(validated_transactions)
+    if hyper_chain.validateBlockchain():
+        hyper_chain.createBlock(validated_transactions)
+    else:
+        print('blockchain is not valid')
+
+    server_connection.terminate()
 
 
 def save_to_ledger(data):
-    if not os.path.find(dlt_directory):
+    if not os.path.exists(dlt_directory):
         os.mkdir(dlt_directory)
     save_file = open(dlt_path, 'ab')
-    pickle.dump(save_file, data)
+    pickle.dump(data, save_file)
 
 
 def load_ledger():
@@ -45,8 +53,8 @@ def load_ledger():
     
     
 def miner_server(data):
-    miner_server = Connection('localhost', miner_port)
-    miner_server.send_data(data)
+    client_connection.send_data(data)
+    print('data is sent to wallet --')
 
 
 
