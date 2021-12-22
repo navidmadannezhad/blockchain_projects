@@ -28,12 +28,26 @@ def ledger_is_present():
 
 
 def load_ledger():
-    file = open(dlt_path, 'rb')
-    ledger = pickle.load(file)
+    load_file = open(dlt_path, 'rb')
+    ledger = []
+    while True:
+        try:
+            transaction = pickle.load(load_file)
+            ledger.append(transaction)
+        except:
+            # pickle items are finished
+            load_file.close()
+            break
+        
     return ledger
 
 def find_balance(public_key, ledger):
-    pass
+    user_balance = 0
+    for transaction in ledger:
+        for output in transaction.outputs:
+            if output['to_address'] == public_key:
+                user_balance = user_balance + output['amount']
+    print(user_balance)
 
 
 # to send data
@@ -49,8 +63,8 @@ def miner_server():
     print('wallet is listening now! --')
     for i in range(1):
         ledger = server_connection.recieve_data()
-        print(ledger)
-        print('data is recieved from miner --')
+        # print(ledger)
+        print('ledger is recieved from miner --')
 
 
 if __name__ == '__main__':
@@ -95,6 +109,7 @@ if __name__ == '__main__':
     if ledger_is_present():
         print('Ledger is found')
         ledger = load_ledger()
+        find_balance(pu2, ledger)
     else:
         print('Ledger is not found')
         ledger = None

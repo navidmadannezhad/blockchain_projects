@@ -26,7 +26,7 @@ def wallet_server():
 def miner_server(data):
     client_connection = Connection('localhost', miner_port)
     client_connection.send_data(data)
-    print('data is sent to wallet --')
+    print('ledger is sent to wallet --')
 
                 
 def proccess_data(data):
@@ -66,7 +66,7 @@ def load_ledger():
             # pickle items are finished
             load_file.close()
             break
-        
+
     return ledger
 
     
